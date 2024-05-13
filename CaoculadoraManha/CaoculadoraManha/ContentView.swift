@@ -12,23 +12,25 @@ struct ContentView: View {
   @State var months: Int?
   @State var result: Int?
   
-  let portes = ["Pequeno", "Médio", "Grande"]
-  @State var porteSelecionado = "Pequeno"
+  @State var porteSelected = Porte.pequeno
   
   var body: some View {
     
     VStack(alignment: .leading, spacing: 20) {
-      git commit -m "<feat> add spacer, divider and logic to calculate dog age"
+      
       Text("Qual a idade do seu cão?")
+        .font(.header5)
       Text("Anos")
+        .font(.body1)
       TextField("Quantos anos completos tem seu cão", value: $years, format: .number)
-      Text("Meses")
+      Text("Meses").font(.body1)
       TextField("Quantos meses além disso ele tem", value: $months, format: .number)
       Text("Porte")
+        .font(.body1)
       
-      Picker("Portes", selection: $porteSelecionado) {
-        ForEach(portes, id: \.self){ porte in
-          Text(porte)
+      Picker("Portes", selection: $porteSelected) {
+        ForEach(Porte.allCases, id: \.self){ porte in
+          Text(porte.rawValue)
         }
       }.pickerStyle(.segmented)
       
@@ -38,7 +40,9 @@ struct ContentView: View {
       
       if let result {
         Text("Seu cachorro tem, em idade humana...")
+          .font(.body1)
         Text("\(result) anos")
+          .font(.display)
       } else {
         Image(ImageResource.clarinha)
           .resizable()
@@ -57,7 +61,7 @@ struct ContentView: View {
         .background(.indigo)
         .foregroundStyle(.white)
         .clipShape(.rect(cornerRadius: 10))
-        .bold()
+        .font(.body1)
     }
     .textFieldStyle(.roundedBorder)
     .keyboardType(.numberPad)
@@ -77,15 +81,13 @@ struct ContentView: View {
     }
     
     let multiplicador: Int
-    switch porteSelecionado {
-    case "Pequeno":
+    switch porteSelected {
+    case .pequeno:
       multiplicador = 6
-    case "Médio":
+    case .médio:
       multiplicador = 7
-    case "Grande":
+    case .grande:
       multiplicador = 8
-    default:
-      multiplicador = 0
     }
     result = (years * multiplicador) + (multiplicador * (months / 12))
   }
